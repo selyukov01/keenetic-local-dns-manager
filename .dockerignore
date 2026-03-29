@@ -1,0 +1,9 @@
+data/
+docs/
+node_modules/
+.next/
+.gitignore
+.env*
+README.md
+LICENSE
+CONTRIBUTING.md
