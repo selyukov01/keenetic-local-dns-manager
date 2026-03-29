@@ -3,7 +3,7 @@
 </p>
 
 <p>
-  <bold>SELYUKOV Keenetic DNS Manager</bold> – a web application for managing static DNS records on Keenetic routers. It will allow you to avoid installing a separate DNS server and will allow you to conveniently manage records through a web interface without using the command line.
+  <b>SELYUKOV Keenetic DNS Manager</b> – a web application for managing static DNS records on Keenetic routers. It will allow you to avoid installing a separate DNS server and will allow you to conveniently manage records through a web interface without using the command line.
 </p>
 
 <p>
