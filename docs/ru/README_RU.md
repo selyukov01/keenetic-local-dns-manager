@@ -76,31 +76,45 @@ npm run build && npm start
 
 ## 🐳 Docker
 
+Вы можете собрать образ самостоятельно:
+
 ```bash
 docker build -t keenetic-dns-manager .
 docker run -p 3000:3000 --env-file .env.local keenetic-dns-manager
+```
+
+или взять готовый из Docker Hub:
+
+```bash
+docker run -p 3000:3000 --env-file .env.local selyukov/keenetic-dns-manager:latest
+```
+
+Для запуска через Docker Compose можно воспользоваться примером [docker-compose.yml](../../deploy/docker/docker-compose.yml):
+
+```bash
+docker compose up -d
 ```
 
 ## 🔧 Конфигурация
 
 Все параметры задаются через переменные окружения. Скопируйте `.env.example` в `.env.local`.
 
-| Переменная | Обязательна | Описание |
-|---|---|---|
-| `APP_MODE` | да | Режим работы: `demo`, `no-auth`, `auth` |
-| `KEENETIC_HOST` | no-auth / auth | IP-адрес или имя хоста интернет-центра |
-| `KEENETIC_LOGIN` | no-auth / auth | Логин интернет-центра |
-| `KEENETIC_PASSWORD` | no-auth / auth | Пароль интернет-центра |
-| `KEENETIC_COOKIE_PERSIST` | нет | Сохранять куки сессии интернет-центра в файл (`true` / `false`) |
-| `AUTH_LOGIN` | auth | Логин для входа в приложение |
-| `AUTH_PASSWORD` | auth | Пароль для входа в приложение |
-| `AUTH_JWT_SECRET` | auth | Секрет JWT (мин. 32 символа). Сгенерировать: `openssl rand -base64 32` |
-| `METRICS_ENABLED` | нет | Включить Prometheus метрики (по умолчанию: `true`) |
-| `METRICS_AUTH_ENABLED` | нет | Защитить `/metrics` через Basic Auth |
-| `METRICS_AUTH_LOGIN` | нет | Логин для метрик |
-| `METRICS_AUTH_PASSWORD` | нет | Пароль для метрик |
-| `LOG_LEVEL` | нет | `debug` · `info` · `warn` · `error` (по умолчанию: `info`) |
-| `LOG_FORMAT` | нет | `json` (продакшен) · `pretty` (разработка) |
+| Переменная | Обязательна | По умолчанию | Описание |
+|---|---|---|---|
+| `APP_MODE` | да | `demo` | Режим работы: `demo`, `no-auth`, `auth` |
+| `KEENETIC_HOST` | no-auth / auth | — | IP-адрес или имя хоста интернет-центра |
+| `KEENETIC_LOGIN` | no-auth / auth | — | Логин интернет-центра |
+| `KEENETIC_PASSWORD` | no-auth / auth | — | Пароль интернет-центра |
+| `KEENETIC_COOKIE_PERSIST` | нет | `false` | Сохранять куки сессии интернет-центра в файл (`true` / `false`) |
+| `AUTH_LOGIN` | auth | — | Логин для входа в приложение |
+| `AUTH_PASSWORD` | auth | — | Пароль для входа в приложение |
+| `AUTH_JWT_SECRET` | auth | — | Секрет JWT (мин. 32 символа). Сгенерировать: `openssl rand -base64 32` |
+| `METRICS_ENABLED` | нет | `true` | Включить Prometheus метрики |
+| `METRICS_AUTH_ENABLED` | нет | `false` | Защитить `/metrics` через Basic Auth |
+| `METRICS_AUTH_LOGIN` | нет | — | Логин для метрик |
+| `METRICS_AUTH_PASSWORD` | нет | — | Пароль для метрик |
+| `LOG_LEVEL` | нет | `info` | `debug` · `info` · `warn` · `error` |
+| `LOG_FORMAT` | нет | `json` | `json` (продакшен) · `pretty` (разработка) |
 
 ## 🔑 Режимы работы
 
@@ -173,6 +187,22 @@ METRICS_AUTH_ENABLED=true
 METRICS_AUTH_LOGIN=prometheus
 METRICS_AUTH_PASSWORD=secret
 ```
+
+Пример для сбора метрик:
+
+```yaml
+- job_name: keenetic-dns-manager
+  metrics_path: /metrics
+  basic_auth:
+    username: prometheus
+    password: prometheus
+  scheme: http
+  static_configs:
+    - targets:
+      - localhost:3000
+```
+
+Пример дашборда Grafana: [dashboard.json](../../deploy/grafana/dashboard.json)
 
 ## 📥 Импорт и экспорт
 

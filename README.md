@@ -76,31 +76,44 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## 🐳 Docker
 
+You can build the image yourself:
+
 ```bash
 docker build -t keenetic-dns-manager .
 docker run -p 3000:3000 --env-file .env.local keenetic-dns-manager
+```
+
+or take it from Docker Hub:
+
+```bash
+docker run -p 3000:3000 --env-file .env.local selyukov/keenetic-dns-manager:latest
+```
+
+To run via Docker Compose, you can use the example file [docker-compose.yml](deploy/docker/docker-compose.yml):
+```bash
+docker compose up -d
 ```
 
 ## 🔧 Configuration
 
 All settings are managed via environment variables. Copy `.env.example` to `.env.local` as a starting point.
 
-| Variable | Required | Description |
-|---|---|---|
-| `APP_MODE` | yes | Operation mode: `demo`, `no-auth`, `auth` |
-| `KEENETIC_HOST` | no-auth / auth | Router IP or hostname |
-| `KEENETIC_LOGIN` | no-auth / auth | Router login |
-| `KEENETIC_PASSWORD` | no-auth / auth | Router password |
-| `KEENETIC_COOKIE_PERSIST` | no | Persist router session cookies to file (`true` / `false`) |
-| `AUTH_LOGIN` | auth | App login |
-| `AUTH_PASSWORD` | auth | App password |
-| `AUTH_JWT_SECRET` | auth | JWT secret (min 32 chars). Generate: `openssl rand -base64 32` |
-| `METRICS_ENABLED` | no | Enable Prometheus metrics (default: `true`) |
-| `METRICS_AUTH_ENABLED` | no | Protect `/metrics` with Basic Auth |
-| `METRICS_AUTH_LOGIN` | no | Metrics auth login |
-| `METRICS_AUTH_PASSWORD` | no | Metrics auth password |
-| `LOG_LEVEL` | no | `debug` · `info` · `warn` · `error` (default: `info`) |
-| `LOG_FORMAT` | no | `json` (production) · `pretty` (development) |
+| Variable | Required | Default | Description |
+|---|---|---|---|
+| `APP_MODE` | yes | `demo` | Operation mode: `demo`, `no-auth`, `auth` |
+| `KEENETIC_HOST` | no-auth / auth | — | Router IP or hostname |
+| `KEENETIC_LOGIN` | no-auth / auth | — | Router login |
+| `KEENETIC_PASSWORD` | no-auth / auth | — | Router password |
+| `KEENETIC_COOKIE_PERSIST` | no | `false` | Persist router session cookies to file (`true` / `false`) |
+| `AUTH_LOGIN` | auth | — | App login |
+| `AUTH_PASSWORD` | auth | — | App password |
+| `AUTH_JWT_SECRET` | auth | — | JWT secret (min 32 chars). Generate: `openssl rand -base64 32` |
+| `METRICS_ENABLED` | no | `true` | Enable Prometheus metrics |
+| `METRICS_AUTH_ENABLED` | no | `false` | Protect `/metrics` with Basic Auth |
+| `METRICS_AUTH_LOGIN` | no | — | Metrics auth login |
+| `METRICS_AUTH_PASSWORD` | no | — | Metrics auth password |
+| `LOG_LEVEL` | no | `info` | `debug` · `info` · `warn` · `error` |
+| `LOG_FORMAT` | no | `json` | `json` (production) · `pretty` (development) |
 
 ## 🔑 Operation Modes
 
@@ -173,6 +186,22 @@ METRICS_AUTH_ENABLED=true
 METRICS_AUTH_LOGIN=prometheus
 METRICS_AUTH_PASSWORD=secret
 ```
+
+Scrape config example:
+
+```yaml
+- job_name: keenetic-dns-manager
+  metrics_path: /metrics
+  basic_auth:
+    username: prometheus
+    password: prometheus
+  scheme: http
+  static_configs:
+    - targets:
+      - localhost:3000
+```
+
+Grafana dashboard example: [dashboard.json](deploy/grafana/dashboard.json)
 
 ## 📥 Import & Export
 
