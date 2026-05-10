@@ -112,7 +112,7 @@ All settings are managed via environment variables. Copy `.env.example` to `.env
 | `METRICS_AUTH_ENABLED` | no | `false` | Protect `/metrics` with Basic Auth |
 | `METRICS_AUTH_LOGIN` | no | — | Metrics auth login |
 | `METRICS_AUTH_PASSWORD` | no | — | Metrics auth password |
-| `LOG_LEVEL` | no | `info` | `debug` · `info` · `warn` · `error` |
+| `LOG_LEVEL` | no | `info` | `debug`, `info`, `warn`, `error` |
 | `LOG_FORMAT` | no | `json` | `json` (production) · `pretty` (development) |
 
 ## 🔑 Operation Modes
@@ -279,4 +279,4 @@ This project is licensed under the [GNU General Public License v3.0](LICENSE).
 
 Keenetic is a trademark of its respective owner. This project is an independent
 third-party software developed to work with Keenetic devices. It is not
-affiliated with, endorsed by, or sponsored by Keenetic.
+affiliated with or sponsored by Keenetic.
