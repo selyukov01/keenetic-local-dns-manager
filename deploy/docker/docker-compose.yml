@@ -1,0 +1,26 @@
+services:
+  keenetic-dns-manager:
+    image: selyukov/keenetic-dns-manager:latest
+    container_name: keenetic-dns-manager
+    restart: unless-stopped
+    user: root  # run as root to be able to write cookie file on host, or create new user, or chown data folder to container "node" user
+    volumes:
+      - ./data:/app/data  # persist cookie
+    ports:
+      - 22080:3000
+    environment:
+      - APP_MODE=auth  # demo, no-auth or auth
+      - KEENETIC_HOST=192.168.1.1  # your keenetic ip
+      - KEENETIC_LOGIN=admin  # your keenetic login
+      - KEENETIC_PASSWORD=mykeeneticpassword  # your keenetic password
+      - KEENETIC_COOKIE_PERSIST=true  # persist cookie to avoid re-login on each restart
+      - AUTH_LOGIN=admin  # your login for web interface
+      - AUTH_PASSWORD=mywebpassword  # your password for web interface
+      - AUTH_JWT_SECRET=00000000000000000000000000000000  # your JWT secret for web interface
+      - METRICS_ENABLED=true  # enable Prometheus metrics endpoint
+      - METRICS_AUTH_ENABLED=true  # enable basic auth for metrics endpoint
+      - METRICS_AUTH_LOGIN=prometheus  # your login for metrics endpoint
+      - METRICS_AUTH_PASSWORD=prometheus  # your password for metrics endpoint
+      - LOG_LEVEL=info  # log level: debug, info, warn, error
+      - LOG_FORMAT=pretty  # log format: pretty, json
+      - TZ=Europe/Moscow  # your timezone
