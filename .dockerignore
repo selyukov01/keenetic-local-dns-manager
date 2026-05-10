@@ -1,9 +1,21 @@
-data/
-docs/
+# Git
+.gitignore
+.git/
+.git_disabled/
+
+# Node.js
 node_modules/
 .next/
-.gitignore
-.env*
+
+# Docs
+docs/
+deploy/
 README.md
 LICENSE
 CONTRIBUTING.md
+
+# Configs
+data/
+
+# Secrets
+.env*
