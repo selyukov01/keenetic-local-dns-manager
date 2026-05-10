@@ -1,4 +1,4 @@
-FROM node:24-alpine AS builder
+FROM node:26-alpine3.23 AS builder
 
 WORKDIR /app
 
@@ -10,10 +10,11 @@ COPY . .
 
 ENV NODE_ENV=production
 
-RUN npm run build
+RUN npx next telemetry disable && \
+    npm run build
 
 
-FROM node:24-alpine
+FROM node:26-alpine3.23
 
 WORKDIR /app
 
